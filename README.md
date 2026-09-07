@@ -1,6 +1,52 @@
-# ⚡ Pulse - Production-Ready Social Media Application
 
-A complete, high-performance Social Media Web Application built with **Node.js, Express, Mongoose**, and a responsive **Vanilla JavaScript/HTML5/CSS3** frontend. Features **Night Mode & Morning Mode** themes, **JWT authentication with Refresh Token rotation**, **Freeze/Unfreeze posts**, **Avatar uploads via Multer**, **Mongoose Hooks & Virtual Populate**, and **100% Vercel Serverless compatibility**.
+<div align="center">
+
+# ⚡ Pulse - Social Media Application
+
+### Production-Ready Full-Stack Social Media Platform
+
+A high-performance social media web application built with **Node.js, Express, and Mongoose**, paired with a responsive **Vanilla JavaScript** frontend. Includes **Night/Morning modes**, **JWT Authentication with Refresh Tokens**, **Freeze/Unfreeze posts**, **Multer Avatar Uploads**, **Mongoose Hooks & Virtuals**, and is **100% Vercel Serverless compatible**.
+
+<br>
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://social-media-application-7jyg.vercel.app/)
+
+<br>
+
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-4.x-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla%20ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![JWT](https://img.shields.io/badge/Auth-JWT%20Refresh-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+
+<br>
+
+![Status](https://img.shields.io/badge/Status-Production%20Ready-2ea44f?style=for-the-badge)
+![License](https://img.shields.io/badge/License-ISC-blue?style=for-the-badge)
+
+</div>
+
+---
+
+## 🌐 Live Demo
+
+Experience the application without setting up a local environment:
+
+### **[https://social-media-application-7jyg.vercel.app/](https://social-media-application-7jyg.vercel.app/)**
+
+---
+
+## 📖 Table of Contents
+
+- [🌟 Key Features](#-key-features)
+  - [Backend](#backend-features)
+  - [Frontend](#frontend-features)
+- [📁 Directory Structure](#-directory-structure)
+- [🚀 How to Run Locally](#-how-to-run-locally)
+- [🌐 How to Deploy to Vercel](#-how-to-deploy-to-vercel)
+- [🛠️ API Endpoint Summary](#️-api-endpoint-summary)
+- [🔒 Security Implementations](#-security-implementations)
+- [📄 License](#-license)
 
 ---
 
@@ -9,55 +55,29 @@ A complete, high-performance Social Media Web Application built with **Node.js, 
 ### Backend Features
 - **Serverless Architecture**: Fully configured for Vercel Serverless Functions via `/api/index.js` and `vercel.json`.
 - **Database Connection Caching**: Optimized MongoDB connection service (`src/config/db.js`) to re-use connections across serverless cold starts.
-- **Security Suite**:
-  - `Helmet` headers protection.
-  - `CORS` configured with specific origin whitelist.
-  - `express-rate-limit` rate limiters on auth & general API endpoints.
-  - `Joi` request body validation.
-  - `bcryptjs` password hashing.
-- **Authentication**:
-  - Signup with password confirmation.
-  - Login, Logout, Token Refresh (`/api/auth/refresh`).
-  - `/api/auth/me` current user endpoint.
-  - Dual JWT Tokens: Short-lived Access Token (15m) + Long-lived Refresh Token (7d).
-- **Mongoose Advanced Features**:
-  - **Hooks (`pre`/`post`)**:
-    - User pre-save hook for password hashing.
-    - Post pre-delete hook (`findOneAndDelete`) to delete child comments automatically.
-    - Comment post-save & post-remove hooks to keep `commentCount` updated on parent Post.
-  - **Virtual Populate**: Dynamic comment populating on Post models without storing comment ID arrays.
-  - **Parent-Child Relationships**: Clean hierarchy between Users, Posts, and Comments.
-- **Post & Social System**:
-  - Create, edit, and delete posts.
-  - **Freeze / Unfreeze Toggle**: Post owners can freeze posts to temporarily lock new comments and likes.
-  - **Likes & Unlikes Toggle**: Toggle like status dynamically.
-  - **Comments System**: Threaded comments under posts.
-  - **Pagination & Queries**: Pagination support (`page`, `limit`, `totalPages`, `hasMore`) with content search (`search`), tag filtering (`tag`), author filtering, and sorting (`latest`, `popular`, `oldest`).
-- **Profile & File Upload**:
-  - Profile update (name, bio).
-  - Multer avatar disk upload with strict MIME type checking (`JPEG`, `PNG`, `WEBP`, `GIF`) and 5MB size limit. Dynamic path handling for local dev (`public/uploads`) and serverless environments (`/tmp/uploads`).
-  - Shareable profile link functionality.
+- **Security Suite**: Helmet, CORS whitelist, Rate Limiting, Joi validation, and bcrypt password hashing.
+- **Authentication**: Signup, Login, Logout, Token Refresh (`/api/auth/refresh`), and `/api/auth/me`. Uses Dual JWT (15m Access Token + 7d Refresh Token).
+- **Advanced Mongoose Features**: Hooks (`pre`/`post`), Virtual Populate, and Parent-Child relationships (Users -> Posts -> Comments).
+- **Post & Social System**: Create, Edit, Delete, Freeze/Unfreeze, Likes/Unlikes toggle, threaded comments, and advanced pagination/filtering.
+- **Profile & Upload**: Profile updates, Multer disk uploads with strict MIME checks, and shareable profile links.
 
 ### Frontend Features
-- **Zero Framework Vanilla JS**: Light weight, ultra-fast SPA architecture.
-- **Night Mode & Morning Mode**: Sleek dark and light themes with persistent `localStorage` saving.
-- **Dynamic API Service (`services/api.js`)**:
-  - Manages JWT Tokens in `localStorage`.
-  - Transparent 401 response interceptor that executes token refresh automatically and retries failed requests seamlessly.
-  - Unified error and loading state management.
-- **Rich Modern Aesthetics**: Glassmorphism cards, Google Font Inter, smooth micro-animations, mobile responsive layouts, toast alert notifications, skeleton/spinner loaders, and interactive post action buttons.
+- **Zero-Framework Vanilla JS**: Lightweight, ultra-fast Single Page Application (SPA) architecture.
+- **Night & Morning Mode**: Sleek dark/light themes with persistent `localStorage` saving.
+- **Dynamic API Service**: Handles JWT tokens in `localStorage`, transparent 401 response interceptor with automatic token refresh, and retry logic.
+- **Rich Modern UI**: Glassmorphism cards, Inter font, smooth micro-animations, mobile responsive layouts, toast notifications, and skeleton loaders.
 
 ---
 
 ## 📁 Directory Structure
 
-```
+```text
 .
 ├── api/
 │   └── index.js                 # Vercel serverless function entry point
 ├── public/                      # Static frontend assets served by Vercel / Express
 │   ├── css/
-│   │   └── style.css            # Custom CSS design system with Night & Morning modes
+│   │   └── style.css            # CSS design system (Night & Morning modes)
 │   ├── js/
 │   │   ├── config.js            # Global API configuration
 │   │   ├── services/
@@ -216,4 +236,12 @@ Click **Deploy**. Vercel will build your static assets and set up the `/api` ser
 ---
 
 ## 📄 License
-ISC License. Built for production demonstration and scalable web deployment.
+
+Distributed under the ISC License. Built for production demonstration and scalable web deployment.
+
+<br>
+
+<div align="center">
+  Made with ⚡ and ❤️
+</div>
+```
