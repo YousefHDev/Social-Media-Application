@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeSpace - Modern Social Network</title>
+  <meta name="description" content="VibeSpace is a modern, high-performance social platform to connect, share, and vibe with your community.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-brand" id="brand-logo" title="VibeSpace Home">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+      <span class="brand-name">VibeSpace</span>
+    </div>
+
+    <div class="nav-search">
+      <span class="nav-search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Search posts, tags, or topics...">
+      <button class="search-clear-btn" id="search-clear-btn" style="display: none;" title="Clear search">&times;</button>
+      <div class="search-results-panel" id="search-results-panel" style="display: none;">
+        <div class="search-tabs" id="search-tabs">
+          <button class="search-tab active" data-search-type="all">All</button>
+          <button class="search-tab" data-search-type="users">People</button>
+          <button class="search-tab" data-search-type="posts">Posts</button>
+          <button class="search-tab" data-search-type="hashtags">Hashtags</button>
+        </div>
+        <div class="search-results-body" id="search-results-body"></div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Theme Toggle (Night / Morning Mode) -->
+      <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme">
+        <span id="theme-icon">🌙</span>
+        <span id="theme-text" class="theme-text-label">Night Mode</span>
+      </button>
+
+      <!-- Auth Action Buttons (Logged Out State) -->
+      <div id="logged-out-actions" class="nav-actions">
+        <button class="btn btn-outline btn-sm" id="open-login-btn">Log In</button>
+        <button class="btn btn-primary btn-sm" id="open-signup-btn">Sign Up</button>
+      </div>
+
+      <!-- User Menu (Logged In State) -->
+      <div id="logged-in-actions" class="nav-actions" style="display: none;">
+        <div class="notification-menu">
+          <button class="notification-bell-btn" id="notification-bell-btn" title="Notifications" aria-label="Notifications">
+            <span aria-hidden="true">🔔</span>
+            <span class="badge-unread-count notification-badge" id="notification-unread-badge" style="display: none;">0</span>
+          </button>
+          <div class="notification-panel" id="notification-panel" style="display: none;">
+            <div class="notification-panel-header">
+              <strong>Notifications</strong>
+              <button class="notification-mark-all" id="notification-mark-all">Mark all as read</button>
+            </div>
+            <div class="notification-list" id="notification-list"></div>
+          </div>
+        </div>
+        <button class="user-menu-btn" id="nav-user-profile-btn" title="View Profile">
+          <img id="nav-user-avatar" class="user-avatar" src="https://ui-avatars.com/api/?name=VibeUser" alt="Avatar">
+          <span id="nav-user-name" class="user-name-label">User</span>
+        </button>
+        <button class="btn btn-secondary btn-sm" id="logout-btn" title="Log Out">Log Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Layout -->
+  <main class="container">
+    <div class="app-grid">
+      
+      <!-- Left Sidebar Navigation -->
+      <aside class="sidebar-left">
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-link active" id="nav-home">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Home Feed</span>
+          </a>
+          <a href="#" class="nav-link" id="nav-messages">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            <span>Messages</span>
+            <span class="badge-unread-count" id="nav-unread-badge" style="display: none;">0</span>
+          </a>
+          <a href="#" class="nav-link" id="nav-my-posts">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <span>My Posts</span>
+          </a>
+          <a href="#" class="nav-link" id="nav-frozen-feed">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 7h6l-3-5zm0 20l3-5H9l3 5zm10-10l-5-3v6l5-3zM2 12l5 3V9L2 12z"/></svg>
+            <span>Frozen Feed</span>
+          </a>
+          <a href="#" class="nav-link" id="nav-profile">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>My Profile</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Center Feed Stream -->
+      <section class="main-content">
+        
+        <!-- Post Creation Card -->
+        <div class="card create-post-card" id="create-post-container">
+          <div class="create-post-header">
+            <img id="create-post-avatar" class="user-avatar" src="https://ui-avatars.com/api/?name=VibeUser" alt="User Avatar">
+            <div>
+              <h4 style="font-weight: 700; font-size: 1rem;">What's vibing today?</h4>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Share your thoughts with the VibeSpace community</p>
+            </div>
+
+            <section class="stories-card card" aria-label="Stories">
+              <div class="stories-header">
+                <h3>Stories</h3>
+                <button class="btn btn-sm btn-outline" id="create-story-btn">+ Add story</button>
+              </div>
+              <div class="stories-rail" id="stories-rail">
+                <div class="story-loading">Loading stories...</div>
+              </div>
+            </section>
+          </div>
+          <form id="create-post-form">
+            <textarea class="create-post-input" id="post-content-input" placeholder="Type your story or vibe..." required></textarea>
+            <div class="tags-input-container">
+              <span class="tags-label">🏷️ Tags:</span>
+              <input type="text" id="post-tags-input" placeholder="tech, lifestyle, webdev (comma separated)">
+            </div>
+            <div class="create-post-actions">
+              <span id="create-post-hint" class="post-hint">✨ Fast & Secure Vanilla SPA</span>
+              <button type="submit" class="btn btn-primary" id="submit-post-btn">
+                <span>Publish Vibe</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Feed Mode Switcher Tabs (Global vs Following Feed) -->
+        <div class="feed-switcher-card">
+          <div class="feed-switcher-tabs" id="feed-switcher">
+            <button class="feed-tab-btn active" id="feed-tab-global" data-feed="global">
+              <span>🌐 Global Feed</span>
+            </button>
+            <button class="feed-tab-btn" id="feed-tab-following" data-feed="following">
+              <span>👥 Following Feed</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Feed Controls & Filters -->
+        <div class="feed-controls">
+          <div class="filter-pills">
+            <button class="pill-btn active" data-sort="latest">Latest ✨</button>
+            <button class="pill-btn" data-sort="popular">Popular 🔥</button>
+            <button class="pill-btn" data-sort="oldest">Oldest ⌛</button>
+          </div>
+          <div class="feed-status-badge">
+            <span id="feed-status-text">Global Feed</span>
+          </div>
+        </div>
+
+        <!-- Posts Feed Stream Container -->
+        <section class="hashtag-page-header card" id="hashtag-page-header" style="display: none;">
+          <div>
+            <span class="hashtag-page-kicker">Hashtag</span>
+            <h2 id="hashtag-page-title">#hashtag</h2>
+            <p id="hashtag-page-count"></p>
+          </div>
+          <div class="hashtag-page-tabs">
+            <button class="btn btn-sm btn-primary" id="hashtag-recent-btn">Recent</button>
+            <button class="btn btn-sm btn-outline" id="hashtag-popular-btn">Popular</button>
+          </div>
+        </section>
+        <div id="posts-stream">
+          <!-- Skeleton Loaders rendered during loading -->
+        </div>
+        <button class="btn btn-secondary" id="hashtag-load-more" style="display: none;">Load more posts</button>
+
+        <!-- Load More Pagination Button -->
+        <div class="load-more-container">
+          <button class="btn btn-secondary" id="load-more-btn" style="display: none;">Load More Vibes</button>
+        </div>
+      </section>
+
+      <!-- Right Sidebar (Profile Summary & Suggested Users Widget) -->
+      <aside class="sidebar-right">
+        <!-- Quick Profile Card Widget -->
+        <div class="card profile-card" id="quick-profile-widget">
+          <div class="profile-banner"></div>
+          <div class="profile-avatar-container">
+            <img id="widget-avatar" class="profile-avatar-img" src="https://ui-avatars.com/api/?name=Guest" alt="Avatar">
+            <label for="avatar-file-input" class="avatar-upload-badge" title="Upload New Avatar" id="upload-avatar-trigger" style="display: none;">
+              📷
+            </label>
+            <input type="file" id="avatar-file-input" accept="image/jpeg,image/png,image/webp,image/gif" style="display: none;">
+          </div>
+          <h3 class="profile-name" id="widget-name">Guest User</h3>
+          <p class="profile-bio" id="widget-bio">Log in to publish posts, give likes, follow users, and share your VibeSpace profile!</p>
+
+          <!-- Interactive Profile Stats (Posts, Followers, Following) -->
+          <div class="profile-stats" id="widget-stats" style="display: none;">
+            <div class="stat-item" id="stat-posts">
+              <span class="stat-val" id="widget-post-count">0</span>
+              <span class="stat-lbl">Posts</span>
+            </div>
+            <div class="stat-item clickable-stat" id="stat-followers" title="View Followers">
+              <span class="stat-val" id="widget-followers-count">0</span>
+              <span class="stat-lbl">Followers</span>
+            </div>
+            <div class="stat-item clickable-stat" id="stat-following" title="View Following">
+              <span class="stat-val" id="widget-following-count">0</span>
+              <span class="stat-lbl">Following</span>
+            </div>
+          </div>
+
+          <div id="widget-actions" style="display: none;" class="widget-actions-box">
+            <button class="btn btn-sm btn-outline" id="open-edit-profile-btn">Edit Profile</button>
+            <button class="btn btn-sm btn-secondary" id="share-profile-btn">🔗 Share Link</button>
+          </div>
+        </div>
+
+        <!-- Suggested Users Widget ("Who to Follow") -->
+        <div class="card info-widget-card" id="suggested-users-card">
+          <div class="info-widget-header" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <svg class="info-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              <h4>Suggested Vibers</h4>
+            </div>
+
+            <div class="card info-widget-card" id="trending-hashtags-card">
+              <div class="info-widget-header">
+                <span class="info-icon" aria-hidden="true">#</span>
+                <h4>Trending</h4>
+              </div>
+              <div id="trending-hashtags-list" class="trending-hashtags-list">
+                <div class="skeleton-line" style="height: 32px; margin: 0.5rem 0;"></div>
+              </div>
+            </div>
+            <button id="refresh-suggested-btn" class="icon-refresh-btn" title="Refresh Suggestions">🔄</button>
+          </div>
+          <div id="suggested-users-list" class="suggested-users-list">
+            <div class="skeleton-line" style="height: 40px; margin: 0.5rem 0;"></div>
+          </div>
+        </div>
+
+        <!-- VibeSpace Platform Highlights Card -->
+        <div class="card info-widget-card">
+          <div class="info-widget-header">
+            <svg class="info-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <h4>VibeSpace Platform</h4>
+          </div>
+          <ul class="info-list">
+            <li><span class="check-icon">✓</span> Real-Time Socket.IO 1-to-1 Chat</li>
+            <li><span class="check-icon">✓</span> Personalized Following Feed Query</li>
+            <li><span class="check-icon">✓</span> Scalable Relationship Follow Model</li>
+            <li><span class="check-icon">✓</span> 100% Vercel Serverless Compatible</li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar (Screens <= 768px) -->
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+    <button class="mobile-nav-item active" id="mobile-nav-home">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Feed</span>
+    </button>
+    <button class="mobile-nav-item" id="mobile-nav-messages">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      <span>Chat</span>
+    </button>
+    <button class="mobile-nav-item" id="mobile-nav-myposts">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      <span>My Posts</span>
+    </button>
+    <button class="mobile-nav-item" id="mobile-nav-profile">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <!-- Real-Time Chat Modal Dialog -->
+  <div class="modal-backdrop" id="chat-modal">
+    <div class="modal-card chat-modal-card">
+      <button class="modal-close" id="close-chat-modal" aria-label="Close modal">&times;</button>
+      
+      <div class="chat-layout">
+        <!-- Left Side: Conversation List -->
+        <aside class="chat-sidebar">
+          <div class="chat-sidebar-header">
+            <h3>💬 Vibe Messages</h3>
+          </div>
+          <div class="conversations-list" id="conversations-list">
+            <!-- Conversations rendered dynamically -->
+            <div class="skeleton-line" style="height: 48px; margin: 0.5rem 0;"></div>
+          </div>
+        </aside>
+
+        <!-- Right Side: Active Chat View -->
+        <section class="chat-main" id="chat-main-view">
+          <!-- Active Conversation Header -->
+          <div class="chat-header" id="chat-header" style="display: none;">
+            <div class="chat-header-user">
+              <div class="avatar-status-wrapper">
+                <img id="chat-recipient-avatar" class="chat-recipient-avatar" src="https://ui-avatars.com/api/?name=User" alt="Recipient">
+                <span class="status-indicator" id="chat-recipient-status"></span>
+              </div>
+              <div>
+                <h4 id="chat-recipient-name" class="chat-recipient-name">Recipient Name</h4>
+                <span id="chat-recipient-sub" class="chat-recipient-sub">Offline</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty Active Chat Placeholder -->
+          <div class="chat-placeholder-state" id="chat-placeholder">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+            <h3>Select a Conversation</h3>
+            <p>Choose a Viber from the sidebar or click Message on any profile!</p>
+          </div>
+
+          <!-- Active Message Feed Stream -->
+          <div class="chat-messages-container" id="chat-messages-container" style="display: none;">
+            <!-- Messages rendered dynamically -->
+          </div>
+
+          <!-- Typing Indicator Banner -->
+          <div class="chat-typing-indicator" id="chat-typing-indicator" style="display: none;">
+            <span>typing...</span>
+          </div>
+
+          <!-- Message Input Form -->
+          <form class="chat-input-form" id="chat-message-form" style="display: none;">
+            <input type="text" class="chat-input" id="chat-input-field" placeholder="Type a message..." required autocomplete="off">
+            <button type="submit" class="btn btn-primary btn-sm" id="chat-send-btn">
+              <span>Send 🚀</span>
+            </button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal (Login / Signup) -->
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="close-auth-modal" aria-label="Close modal">&times;</button>
+      
+      <div class="modal-header">
+        <h2 class="modal-title" id="auth-modal-title">Welcome to VibeSpace</h2>
+        <p class="modal-subtitle">Connect and share with your creative network</p>
+      </div>
+
+      <!-- Auth Tab Switcher -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tab-login">Log In</button>
+        <button class="auth-tab-btn" id="tab-signup">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <input type="email" id="login-email" class="form-control" placeholder="name@vibespace.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div class="form-error" id="login-error"></div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1.25rem;">Log In to VibeSpace</button>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signup-form" style="display: none;">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" class="form-control" placeholder="Alex Morgan" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" class="form-control" placeholder="alex@vibespace.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-password">Password (min 6 chars)</label>
+          <input type="password" id="signup-password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="signup-confirm-password">Confirm Password</label>
+          <input type="password" id="signup-confirm-password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div class="form-error" id="signup-error"></div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1.25rem;">Join VibeSpace Community</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-backdrop" id="profile-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="close-profile-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <h2 class="modal-title">Edit VibeSpace Profile</h2>
+        <p class="modal-subtitle">Update your personal display details</p>
+      </div>
+      <form id="edit-profile-form">
+        <div class="form-group">
+          <label class="form-label" for="edit-name">Display Name</label>
+          <input type="text" id="edit-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-bio">Bio</label>
+          <textarea id="edit-bio" class="form-control" style="min-height: 90px;" placeholder="Tell the VibeSpace community about yourself..."></textarea>
+        </div>
+        <div class="form-error" id="edit-profile-error"></div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1.25rem;">Save Profile Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Followers / Following List Modal -->
+  <div class="modal-backdrop" id="follow-modal">
+    <div class="modal-card" style="max-width: 500px;">
+      <button class="modal-close" id="close-follow-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <h2 class="modal-title" id="follow-modal-title">VibeSpace Connections</h2>
+        <p class="modal-subtitle" id="follow-modal-subtitle">People connected with this user</p>
+      </div>
+
+      <!-- Follow Tabs -->
+      <div class="auth-tabs" style="margin-bottom: 1rem;">
+        <button class="auth-tab-btn active" id="tab-followers">Followers</button>
+        <button class="auth-tab-btn" id="tab-following">Following</button>
+      </div>
+
+      <!-- Follow User List Stream -->
+      <div id="follow-user-list" class="follow-user-list">
+        <div class="skeleton-line" style="height: 50px; margin: 0.5rem 0;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="story-create-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="close-story-create-modal" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <h2 class="modal-title">Create a Story</h2>
+        <p class="modal-subtitle">Share an image or video for 24 hours</p>
+      </div>
+      <form id="story-create-form">
+        <div class="form-group">
+          <label class="form-label" for="story-media-input">Image or video</label>
+          <input class="form-control" type="file" id="story-media-input" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" required>
+        </div>
+        <div id="story-media-preview" class="story-media-preview"></div>
+        <div class="form-group">
+          <label class="form-label" for="story-caption-input">Caption (optional)</label>
+          <textarea class="form-control" id="story-caption-input" maxlength="280" placeholder="Add a short caption..."></textarea>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="publish-story-btn">Publish story</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="story-viewer-backdrop" id="story-viewer-modal">
+    <div class="story-viewer">
+      <button class="story-viewer-close" id="close-story-viewer" aria-label="Close story">&times;</button>
+      <div class="story-progress" id="story-progress"></div>
+      <div class="story-viewer-author" id="story-viewer-author"></div>
+      <div class="story-viewer-media" id="story-viewer-media"></div>
+      <div class="story-viewer-caption" id="story-viewer-caption"></div>
+      <div class="story-viewer-viewers" id="story-viewer-viewers"></div>
+      <div class="story-viewer-actions">
+        <button class="story-nav story-prev" id="story-prev" aria-label="Previous story">&#8249;</button>
+        <button class="story-reaction" data-reaction="like">❤️</button>
+        <button class="story-reaction" data-reaction="haha">😂</button>
+        <button class="story-reaction" data-reaction="sad">😢</button>
+        <button class="story-reaction" data-reaction="angry">😡</button>
+        <button class="story-reaction" data-reaction="wow">😮</button>
+        <button class="story-nav story-next" id="story-next" aria-label="Next story">&#8250;</button>
+        <button class="story-delete" id="story-delete" aria-label="Delete your story">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Dialog Modal -->
+  <div class="confirm-modal-backdrop" id="confirm-dialog-modal">
+    <div class="confirm-modal-box">
+      <h3 class="confirm-modal-title" id="confirm-modal-title">Delete Comment</h3>
+      <p class="confirm-modal-desc" id="confirm-modal-desc">Are you sure you want to delete this comment? This action cannot be undone.</p>
+      <div class="confirm-modal-actions">
+        <button class="btn btn-secondary" id="confirm-modal-cancel">Cancel</button>
+        <button class="btn btn-danger" id="confirm-modal-submit" style="background: #ff4757; color: #fff; border: none; border-radius: var(--radius-md); padding: 0.5rem 1rem; font-weight: 600; cursor: pointer;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+
+  <!-- Socket.IO Client CDN Script -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <!-- Script Imports -->
+  <script src="js/config.js"></script>
+  <script src="js/services/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
