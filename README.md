@@ -1,6 +1,4 @@
-# 🚀 VibeSpace - Professional GitHub README
 
-<div align="center">
 
 # 🌌 VibeSpace
 
